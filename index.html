@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Histórico de HQs e Livros</title>
+  <link rel="stylesheet" href="style.css" />
+  <script defer src="script.js"></script>
+</head>
+<body>
+  <!-- Header fixo -->
+  <header class="header">
+    <h1>Histórico</h1>
+    <nav class="nav">
+      <ul class="nav-links">
+        <li><a href="index.html">Home</a></li>
+        <li><a href="adicionar.html">Adicionar</a></li>
+        <li><a href="historico.html">Histórico</a></li>
+      </ul>
+      <div class="hamburger" onclick="toggleMenu()">
+        <span></span>
+        <span></span>
+        <span></span>
+      </div>
+    </nav>
+  </header>
+
+  <!-- Conteúdo principal -->
+  <main class="main-content">
+    <!-- Blocos principais -->
+    <section class="stats-overview">
+      <div class="stat-block">
+        <i class="icon">📚</i>
+        <h2>Total de Livros</h2>
+        <p id="total-livros">0</p>
+      </div>
+      <div class="stat-block">
+        <i class="icon">🦸‍♂️</i>
+        <h2>Total de HQs</h2>
+        <p id="total-hqs">0</p>
+      </div>
+      <div class="stat-block">
+        <i class="icon">✅</i>
+        <h2>% Livros Lidos</h2>
+        <p id="percent-livros">0%</p>
+      </div>
+      <div class="stat-block">
+        <i class="icon">✅</i>
+        <h2>% HQs Lidas</h2>
+        <p id="percent-hqs">0%</p>
+      </div>
+    </section>
+
+    <!-- Cartões detalhados -->
+    <section class="detailed-stats">
+      <div class="card">
+        <h3>HQs</h3>
+        <p>Lidas: <span id="hqs-lidas">0</span></p>
+        <p>Não lidas: <span id="hqs-nao-lidas">0</span></p>
+        <p>Porcentagem lidas: <span id="hqs-percent">0%</span></p>
+      </div>
+      <div class="card">
+        <h3>Livros</h3>
+        <p>Lidos: <span id="livros-lidos">0</span></p>
+        <p>Não lidos: <span id="livros-nao-lidos">0</span></p>
+        <p>Porcentagem lidos: <span id="livros-percent">0%</span></p>
+      </div>
+    </section>
+  </main>
+</body>
+</html>
