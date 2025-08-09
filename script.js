@@ -793,7 +793,7 @@ function mostrarGrafico(tipo) {
       labels: labels,
       datasets: [{
         data: dados,
-        backgroundColor: ['#2ecc71', '#f1c40f', '#e74c3c'],
+        backgroundColor: ['#2ecc71', '#db1414ff', '#ebdb08ff'],
         borderWidth: 1
       }]
     },
