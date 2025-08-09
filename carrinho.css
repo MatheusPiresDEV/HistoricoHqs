@@ -177,7 +177,8 @@ body {
 
 .modal-content input[type="text"],
 .modal-content input[type="password"],
-.modal-content input[type="file"] {
+.modal-content input[type="file"],
+.modal-content input[type="number"] {
   padding: 10px;
   border-radius: 5px;
   border: 1px solid #ccc;
@@ -200,6 +201,66 @@ body {
 
 .hidden {
   display: none;
+}
+/* Estilo para barra de pesquisa e filtros */
+.filtros {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 15px;
+  padding: 20px;
+  background-color: #ecf0f1;
+  border-radius: 10px;
+  margin: 0 20px 20px;
+}
+
+#pesquisaItem {
+  padding: 10px 15px;
+  border-radius: 6px;
+  border: 1px solid #ccc;
+  font-size: 1rem;
+  width: 250px;
+  transition: border-color 0.3s ease;
+}
+
+#pesquisaItem:focus {
+  border-color: #3498db;
+  outline: none;
+}
+
+.filtros select {
+  padding: 10px;
+  border-radius: 6px;
+  border: 1px solid #ccc;
+  font-size: 1rem;
+  background-color: white;
+  transition: border-color 0.3s ease;
+}
+
+.filtros select:focus {
+  border-color: #3498db;
+  outline: none;
+}
+
+/* Responsivo */
+@media (max-width: 600px) {
+  .filtros {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  #pesquisaItem,
+  .filtros select {
+    width: 100%;
+  }
+}
+/* Estilo para média de preços */
+#media-precos {
+  text-align: center;
+  font-size: 1.1rem;
+  font-weight: bold;
+  color: #2c3e50;
+  margin-bottom: 20px;
 }
 
 /* Responsividade */

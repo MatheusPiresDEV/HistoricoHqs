@@ -1,6 +1,5 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
-
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
@@ -8,7 +7,6 @@
   <link rel="stylesheet" href="style.css" />
   <script defer src="script.js"></script>
 </head>
-
 <body>
   <!-- Header fixo -->
   <header class="header">
@@ -18,6 +16,7 @@
         <li><a href="index.html">Home</a></li>
         <li><a href="adicionar.html">Adicionar</a></li>
         <li><a href="historico.html">Histórico</a></li>
+        <li><a href="carrinho.html">Carrinho</a></li> <!-- Link adicionado -->
       </ul>
       <div class="hamburger" onclick="toggleMenu()">
         <span></span>
@@ -58,24 +57,24 @@
         </select>
       </div>
 
-      <div class="form-group image-options">
-        <label for="fileInput">Imagem do item:</label>
-        <button onclick="abrirCamera()">📷 Tirar Foto</button>
-        <input type="file" accept="image/*" id="fileInput" />
-      </div>
-
       <div class="form-group">
         <label for="nomeItem">Nome do item:</label>
         <input type="text" id="nomeItem" placeholder="Nome do item" />
       </div>
+
       <div class="form-group">
-        <label for="valorItem">Valor (R$):</label>
-        <input type="number" id="valorItem" placeholder="Ex: 29.90" step="0.01" min="0" />
+        <label>Imagem do item:</label>
+        <small>Preencha apenas um dos campos abaixo</small>
+
+        <label for="fileInput">Upload de imagem:</label>
+        <input type="file" accept="image/*" id="fileInput" />
+
+        <label for="urlInput">Ou informe a URL da imagem:</label>
+        <input type="url" id="urlInput" placeholder="https://exemplo.com/imagem.jpg" />
       </div>
 
       <button onclick="salvarItem()">Salvar</button>
     </section>
   </main>
 </body>
-
 </html>

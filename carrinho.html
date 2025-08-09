@@ -1,73 +1,93 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Carrinho de Compras</title>
-    <link rel="stylesheet" href="carrinho.css" />
-    <script defer src="carrinho.js"></script>
-    <script defer src="script.js"></script>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Carrinho de Compras</title>
+  <link rel="stylesheet" href="carrinho.css" />
+  <script defer src="carrinho.js"></script>
 </head>
 <body>
-    <!-- Header fixo com hamburger -->
-    <header class="header">
-        <h1>Carrinho</h1>
-        <nav class="nav" aria-label="Menu principal">
-            <ul class="nav-links">
-                <li><a href="index.html">Home</a></li>
-                <li><a href="adicionar.html">Adicionar</a></li>
-                <li><a href="historico.html">Histórico</a></li>
-                <li><a href="carrinho.html">Carrinho</a></li>
-            </ul>
-            <button class="hamburger" aria-label="Abrir menu">
-                <span></span>
-                <span></span>
-                <span></span>
-            </button>
-        </nav>
-    </header>
+  <header class="header">
+    <h1>Carrinho</h1>
+    <nav class="nav" aria-label="Menu principal">
+      <ul class="nav-links">
+        <li><a href="index.html">Home</a></li>
+        <li><a href="adicionar.html">Adicionar</a></li>
+        <li><a href="historico.html">Histórico</a></li>
+        <li><a href="carrinho.html">Carrinho</a></li>
+      </ul>
+      <button class="hamburger" aria-label="Abrir menu">
+        <span></span>
+        <span></span>
+        <span></span>
+      </button>
+    </nav>
+  </header>
 
-    <main>
-        <section class="controls">
-            <button id="addItemBtn" type="button">➕ Adicionar novo item</button>
-        </section>
+  <main>
+    <section class="controls">
+      <button id="addItemBtn" type="button">➕ Adicionar novo item</button>
+    </section>
 
-        <section id="itemList" class="item-list">
-            <!-- Cards dos itens serão inseridos aqui -->
-        </section>
+    <section id="filtros" class="filtros">
+      <input type="text" id="pesquisaItem" placeholder="🔍 Pesquisar por nome..." />
+      <select id="filtroTipo">
+        <option value="">Todos os tipos</option>
+        <option value="HQ">HQ</option>
+        <option value="Livro">Livro</option>
+        <option value="Outro">Outro</option>
+      </select>
+      <select id="filtroStatus">
+        <option value="">Todos os status</option>
+        <option value="Comprei">Comprei</option>
+        <option value="A comprar">A comprar</option>
+      </select>
+      <select id="ordenarValor">
+        <option value="">Sem ordenação</option>
+        <option value="maior">Maior valor</option>
+        <option value="menor">Menor valor</option>
+      </select>
+    </section>
 
-        <!-- Modal para adicionar item -->
-        <div id="modal" class="modal hidden" role="dialog" aria-labelledby="modalTitle">
-            <div class="modal-content">
-                <h2 id="modalTitle">Adicionar Item</h2>
-                <input type="password" id="senhaAdd" placeholder="Digite a senha" />
+    <!-- Média de preços -->
+    <p id="media-precos">Média de preços: R$ 0,00</p>
 
-                <form id="formAdd" class="hidden">
-                    <input type="text" id="nomeItem" placeholder="Nome do item" required />
+    <!-- Lista de itens -->
+    <section id="itemList" class="item-list"></section>
 
-                    <div class="image-options">
-                        <input type="text" id="imagemLink" placeholder="Link da imagem (opcional)" />
-                        <input type="file" id="imagemUpload" accept="image/*" />
-                    </div>
+    <!-- Modal para adicionar item -->
+    <div id="modal" class="modal hidden" role="dialog" aria-labelledby="modalTitle">
+      <div class="modal-content">
+        <h2 id="modalTitle">Adicionar Item</h2>
+        <input type="password" id="senhaAdd" placeholder="Digite a senha" />
 
-                    <fieldset class="form-group">
-                        <legend>Tipo do item:</legend>
-                        <label><input type="checkbox" name="tipoItem" value="HQ" /> HQ</label>
-                        <label><input type="checkbox" name="tipoItem" value="Livro" /> Livro</label>
-                        <label><input type="checkbox" name="tipoItem" value="Outro" /> Outro</label>
-                    </fieldset>
+        <form id="formAdd" class="hidden" onsubmit="return false;">
+          <input type="text" id="nomeItem" placeholder="Nome do item" required />
 
-                    <div class="form-group">
-                        <label for="valorItem">Valor (R$):</label>
-                        <input type="number" id="valorItem" placeholder="Ex: 29.90" step="0.01" min="0" required />
-                    </div>
+          <div class="image-options">
+            <input type="text" id="imagemLink" placeholder="Link da imagem (opcional)" />
+            <input type="file" id="imagemUpload" accept="image/*" />
+          </div>
 
-                    <button id="confirmAdd" type="submit">Confirmar</button>
-                </form>
+          <fieldset class="form-group">
+            <legend>Tipo do item:</legend>
+            <label><input type="checkbox" name="tipoItem" value="HQ" /> HQ</label>
+            <label><input type="checkbox" name="tipoItem" value="Livro" /> Livro</label>
+            <label><input type="checkbox" name="tipoItem" value="Outro" /> Outro</label>
+          </fieldset>
 
-                <button id="fecharModal" type="button">Fechar</button>
-            </div>
-        </div>
-    </main>
+          <div class="form-group">
+            <label for="valorItem">Valor (R$):</label>
+            <input type="number" id="valorItem" placeholder="Ex: 29.90" step="0.01" min="0" required />
+          </div>
+
+          <button id="confirmAdd" type="button">Confirmar</button>
+        </form>
+
+        <button id="fecharModal" type="button">Fechar</button>
+      </div>
+    </div>
+  </main>
 </body>
 </html>

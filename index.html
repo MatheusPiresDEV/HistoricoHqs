@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
+
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
@@ -8,6 +9,7 @@
   <script defer src="script.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 </head>
+
 <body>
   <!-- Header fixo com hamburger -->
   <header class="header">
@@ -31,63 +33,79 @@
   <main class="main-content">
     <section class="stats-overview">
       <div class="stat-block">
-        <i class="icon">📚</i>
         <h2>Total de Livros</h2>
         <p id="total-livros">0</p>
       </div>
       <div class="stat-block">
-        <i class="icon">🦸‍♂️</i>
         <h2>Total de HQs</h2>
         <p id="total-hqs">0</p>
       </div>
       <div class="stat-block">
-        <i class="icon">✅</i>
         <h2>% Livros Lidos</h2>
         <p id="percent-livros">0%</p>
       </div>
       <div class="stat-block">
-        <i class="icon">✅</i>
         <h2>% HQs Lidas</h2>
         <p id="percent-hqs">0%</p>
       </div>
-    </section>
-
-    <section class="detailed-stats">
-      <div class="card">
-        <h3>HQs</h3>
-        <p>Lidas: <span id="hqs-lidas">0</span></p>
-        <p>Não lidas: <span id="hqs-nao-lidas">0</span></p>
-        <p>Porcentagem lidas: <span id="hqs-percent">0%</span></p>
+      <div class="stat-block">
+        <h2>% Livros Não Lidos</h2>
+        <p id="percent-livros-nao-lidos">0%</p>
       </div>
-      <div class="card">
-        <h3>Livros</h3>
-        <p>Lidos: <span id="livros-lidos">0</span></p>
-        <p>Não lidos: <span id="livros-nao-lidos">0</span></p>
-        <p>Porcentagem lidos: <span id="livros-percent">0%</span></p>
+      <div class="stat-block">
+        <h2>% HQs Não Lidas</h2>
+        <p id="percent-hqs-nao-lidas">0%</p>
       </div>
-      <div class="card">
-        <h3>Carrinho</h3>
-        <p>Total de itens: <span id="total-carrinho">0</span></p>
-        <p>HQs: <span id="carrinho-hqs">0</span> (<span id="percent-hqs-carrinho">0%</span>)</p>
-        <p>Livros: <span id="carrinho-livros">0</span> (<span id="percent-livros-carrinho">0%</span>)</p>
-        <p>Outros: <span id="carrinho-outros">0</span> (<span id="percent-outros-carrinho">0%</span>)</p>
-        <hr />
-        <p>Comprados: <span id="carrinho-comprados">0</span> (<span id="percent-comprados">0%</span>)</p>
-        <p>A comprar: <span id="carrinho-apendentes">0</span> (<span id="percent-apendentes">0%</span>)</p>
-        <hr />
-        <p>💸 Total gasto: <span id="total-gasto">R$ 0.00</span></p>
-        <p>🛒 Total no carrinho: <span id="total-carrinho-valor">R$ 0.00</span></p>
+      <div class="stat-block">
+        <h2>Livros em andamento</h2>
+        <p id="percent-livros-andamento">0%</p>
       </div>
-    </section>
-
-    <section class="grafico-section">
-      <div class="grafico-controles">
-        <button onclick="mostrarGrafico('relacao')">Relação HQs vs Livros</button>
-        <button onclick="mostrarGrafico('hq')">HQs Lidos vs Não lidos</button>
-        <button onclick="mostrarGrafico('livro')">Livros Lidos vs Não lidos</button>
+      <div class="stat-block">
+        <h2>HQs em andamento</h2>
+        <p id="percent-hqs-andamento">0%</p>
       </div>
-      <canvas id="graficoCanvas" width="400" height="400"></canvas>
     </section>
   </main>
-</body>
+  </section>
+  <section class="detailed-stats">
+    <div class="card">
+      <h3>HQs</h3>
+      <p>Lidas: <span id="hqs-lidas">0</span></p>
+      <p>Não lidas: <span id="hqs-nao-lidas">0</span></p>
+      <p>Porcentagem lidas: <span id="hqs-percent">0%</span></p>
+    </div>
+    <div class="card">
+      <h3>Livros</h3>
+      <p>Lidos: <span id="livros-lidos">0</span></p>
+      <p>Não lidos: <span id="livros-nao-lidos">0</span></p>
+      <p>Porcentagem lidos: <span id="livros-percent">0%</span></p>
+    </div>
+    <div class="card">
+      <h3>Carrinho</h3>
+      <p>Total de itens: <span id="total-carrinho">0</span></p>
+      <p>HQs: <span id="carrinho-hqs">0</span> (<span id="percent-hqs-carrinho">0%</span>)</p>
+      <p>Livros: <span id="carrinho-livros">0</span> (<span id="percent-livros-carrinho">0%</span>)</p>
+      <p>Outros: <span id="carrinho-outros">0</span> (<span id="percent-outros-carrinho">0%</span>)</p>
+      <hr />
+      <p>Comprados: <span id="carrinho-comprados">0</span> (<span id="percent-comprados">0%</span>)</p>
+      <p>A comprar: <span id="carrinho-apendentes">0</span> (<span id="percent-apendentes">0%</span>)</p>
+      <hr />
+      <p> Total gasto: <span id="total-gasto">R$ 0.00</span></p>
+      <p> Total no carrinho: <span id="total-carrinho-valor">R$ 0.00</span></p>
+    </div>
+  </section>
+
+  <section class="grafico-section">
+    <div class="grafico-controles">
+      <button onclick="mostrarGrafico('relacao')">Relação HQs vs Livros</button>
+      <button onclick="mostrarGrafico('hq')">HQs Lidos vs Não lidos</button>
+      <button onclick="mostrarGrafico('livro')">Livros Lidos vs Não lidos</button>
+      <button onclick="mostrarGrafico('status-livros')">Status dos Livros</button>
+      <button onclick="mostrarGrafico('status-hqs')">Status das HQs</button>
+      <button onclick="mostrarGrafico('andamento')">Itens em andamento</button>
+      <button onclick="mostrarGrafico('progresso-total')">Progresso Total</button>
+    </div>
+    <canvas id="graficoCanvas" width="300" height="300"></canvas>
+  </section>
+
 </html>

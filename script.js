@@ -70,23 +70,33 @@ function confirmarSenha() {
 }
 
 
-// Lê campos, cria novo item e salva no localStorage
+document.addEventListener("DOMContentLoaded", () => {
+  carregarItensDoLocalStorage();
+});
+
+// Salva novo item no localStorage
 function salvarItem() {
   const nome = document.getElementById('nomeItem').value.trim();
   const tipo = document.getElementById('tipoItem').value;
   const arquivo = document.getElementById('fileInput').files[0];
+  const urlImagem = document.getElementById('urlInput').value.trim();
 
-  if (!nome || !tipo || !arquivo) {
-    alert('Preencha todos os campos.');
+  if (!nome || !tipo) {
+    alert('Preencha todos os campos obrigatórios.');
     return;
   }
 
-  const reader = new FileReader();
-  reader.onload = function (e) {
+  if ((arquivo && urlImagem) || (!arquivo && !urlImagem)) {
+    alert('Preencha apenas UM campo de imagem: upload OU URL.');
+    return;
+  }
+
+  const criarItem = (imagemFinal) => {
     const novoItem = {
+      id: crypto.randomUUID(),
       nome,
       tipo,
-      imagem: e.target.result,
+      imagem: imagemFinal,
       data: new Date().toLocaleString('pt-BR'),
       status: 'Não lido',
       dataConclusao: null
@@ -95,32 +105,34 @@ function salvarItem() {
     salvarNoLocalStorage(novoItem);
     alert(`Item "${nome}" salvo com sucesso!`);
 
-    // Limpa formulários
     document.getElementById('nomeItem').value = '';
     document.getElementById('tipoItem').value = '';
     document.getElementById('fileInput').value = '';
+    document.getElementById('urlInput').value = '';
 
-    // Recarrega a página para atualizar Home e histórico
     window.location.reload();
   };
-  reader.readAsDataURL(arquivo);
-}
 
+  if (arquivo) {
+    const reader = new FileReader();
+    reader.onload = function (e) {
+      criarItem(e.target.result);
+    };
+    reader.readAsDataURL(arquivo);
+  } else {
+    criarItem(urlImagem);
+  }
+}
 function salvarNoLocalStorage(item) {
   const itens = JSON.parse(localStorage.getItem('itens')) || [];
   itens.push(item);
   localStorage.setItem('itens', JSON.stringify(itens));
 }
 
-
-// Lê todos os itens, atualiza estatísticas e renderiza cartões
 function carregarItensDoLocalStorage() {
   const itens = JSON.parse(localStorage.getItem('itens')) || [];
-
-  // Atualiza Home (estatísticas)
   atualizarEstatisticas(itens);
 
-  // Se não houver container de cards, aborta
   const cardsContainer = document.querySelector('.cards-container');
   if (!cardsContainer) return;
 
@@ -128,8 +140,6 @@ function carregarItensDoLocalStorage() {
   itens.forEach(adicionarCartaoAoHistorico);
 }
 
-
-// Atualiza estatísticas de livros e HQs na Home
 function atualizarEstatisticas(itens) {
   const livros = itens.filter(i => i.tipo === 'Livro');
   const hqs = itens.filter(i => i.tipo === 'HQ');
@@ -137,39 +147,27 @@ function atualizarEstatisticas(itens) {
   const cont = (arr, status) => arr.filter(i => i.status === status).length;
   const pct = (num, tot) => tot > 0 ? Math.round((num / tot) * 100) : 0;
 
-  const livrosTotal = livros.length;
-  const hqsTotal = hqs.length;
-
-  const livrosL = cont(livros, 'Lido');
-  const hqsL = cont(hqs, 'Lido');
-
-  document.getElementById('total-livros').textContent = livrosTotal;
-  document.getElementById('livros-lidos').textContent = livrosL;
+  document.getElementById('total-livros').textContent = livros.length;
+  document.getElementById('livros-lidos').textContent = cont(livros, 'Lido');
   document.getElementById('livros-nao-lidos').textContent = cont(livros, 'Não lido');
-  document.getElementById('livros-percent').textContent = pct(livrosL, livrosTotal) + '%';
-  document.getElementById('percent-livros').textContent = pct(livrosL, livrosTotal) + '%';
+  document.getElementById('livros-percent').textContent = pct(cont(livros, 'Lido'), livros.length) + '%';
 
-  document.getElementById('total-hqs').textContent = hqsTotal;
-  document.getElementById('hqs-lidas').textContent = hqsL;
+  document.getElementById('total-hqs').textContent = hqs.length;
+  document.getElementById('hqs-lidas').textContent = cont(hqs, 'Lido');
   document.getElementById('hqs-nao-lidas').textContent = cont(hqs, 'Não lido');
-  document.getElementById('hqs-percent').textContent = pct(hqsL, hqsTotal) + '%';
-  document.getElementById('percent-hqs').textContent = pct(hqsL, hqsTotal) + '%';
+  document.getElementById('hqs-percent').textContent = pct(cont(hqs, 'Lido'), hqs.length) + '%';
 }
 
-
-// Cria um cartão no histórico com botão de status e excluir
 function adicionarCartaoAoHistorico(item) {
   const cardsContainer = document.querySelector('.cards-container');
   const card = document.createElement('article');
   card.className = 'item-card';
 
-  // Imagem
   const img = document.createElement('img');
   img.src = item.imagem;
   img.alt = 'Capa';
   img.className = 'item-image';
 
-  // Info
   const info = document.createElement('div');
   info.className = 'item-info';
 
@@ -182,15 +180,13 @@ function adicionarCartaoAoHistorico(item) {
   dateEl.textContent = `Adicionado em: ${item.data}`;
 
   const statusEl = document.createElement('p');
-  statusEl.className = 'item-status ' +
-    (item.status === 'Lido' ? 'lido' :
+  statusEl.className = 'item-status ' + (
+    item.status === 'Lido' ? 'lido' :
       item.status === 'Em andamento' ? 'em-andamento' :
-        'nao-lido');
+        'nao-lido'
+  );
   statusEl.textContent = `Status: ${item.status}`;
 
-  info.append(title, dateEl, statusEl);
-
-  // Botão de status único
   const statusBtn = document.createElement('button');
   statusBtn.className = 'btn-status';
   atualizarTextoBotaoStatus(statusBtn, item.status);
@@ -199,11 +195,6 @@ function adicionarCartaoAoHistorico(item) {
     if (item.status === 'Não lido') {
       item.status = 'Em andamento';
       item.dataConclusao = null;
-      atualizarItemNoLocalStorage(item);
-      statusEl.textContent = `Status: ${item.status}`;
-      statusEl.className = 'item-status em-andamento';
-      atualizarTextoBotaoStatus(statusBtn, item.status);
-
     } else if (item.status === 'Em andamento') {
       const resp = prompt('Quantas páginas o livro tem?');
       const paginas = parseInt(resp, 10);
@@ -214,13 +205,7 @@ function adicionarCartaoAoHistorico(item) {
 
       item.status = 'Lido';
       item.dataConclusao = new Date().toLocaleString('pt-BR');
-      atualizarItemNoLocalStorage(item);
 
-      statusEl.textContent = `Status: ${item.status}`;
-      statusEl.className = 'item-status lido';
-      atualizarTextoBotaoStatus(statusBtn, item.status);
-
-      // Exibe resumo
       const inicio = parseDataHistorico(item.data);
       const fim = parseDataHistorico(item.dataConclusao);
       const resumo = avaliarLeitura(inicio, fim, paginas);
@@ -229,9 +214,17 @@ function adicionarCartaoAoHistorico(item) {
       pre.innerText = resumo;
       info.appendChild(pre);
     }
+
+    atualizarItemNoLocalStorage(item);
+    statusEl.textContent = `Status: ${item.status}`;
+    statusEl.className = 'item-status ' + (
+      item.status === 'Lido' ? 'lido' :
+        item.status === 'Em andamento' ? 'em-andamento' :
+          'nao-lido'
+    );
+    atualizarTextoBotaoStatus(statusBtn, item.status);
   });
 
-  // Botão Excluir
   const excluirBtn = document.createElement('button');
   excluirBtn.className = 'btn-excluir';
   excluirBtn.textContent = 'Excluir';
@@ -245,14 +238,11 @@ function adicionarCartaoAoHistorico(item) {
     }
   });
 
-  // Monta o cartão
+  info.append(title, dateEl, statusEl, excluirBtn);
   card.append(img, info, statusBtn);
-  info.appendChild(excluirBtn);
   cardsContainer.appendChild(card);
 }
 
-
-// Atualiza texto e habilita/desabilita o botão de status
 function atualizarTextoBotaoStatus(btn, status) {
   if (status === 'Não lido') {
     btn.innerText = 'Iniciar leitura';
@@ -266,32 +256,21 @@ function atualizarTextoBotaoStatus(btn, status) {
   }
 }
 
-
-// Sobrescreve o item no localStorage
 function atualizarItemNoLocalStorage(itemAtualizado) {
   const itens = JSON.parse(localStorage.getItem('itens')) || [];
-  const idx = itens.findIndex(i =>
-    i.nome === itemAtualizado.nome &&
-    i.data === itemAtualizado.data
-  );
+  const idx = itens.findIndex(i => i.id === itemAtualizado.id);
   if (idx >= 0) {
     itens[idx] = itemAtualizado;
     localStorage.setItem('itens', JSON.stringify(itens));
   }
 }
 
-// Remove o item do localStorage
 function excluirItemDoLocalStorage(itemParaExcluir) {
   let itens = JSON.parse(localStorage.getItem('itens')) || [];
-  itens = itens.filter(i =>
-    !(i.nome === itemParaExcluir.nome &&
-      i.data === itemParaExcluir.data)
-  );
+  itens = itens.filter(i => i.id !== itemParaExcluir.id);
   localStorage.setItem('itens', JSON.stringify(itens));
 }
 
-
-// Converte string "dd/MM/yyyy HH:mm:ss" em Date
 function parseDataHistorico(str) {
   const [data, hora] = str.split(' ');
   const [dia, mes, ano] = data.split('/').map(Number);
@@ -299,7 +278,6 @@ function parseDataHistorico(str) {
   return new Date(ano, mes - 1, dia, h, m, s);
 }
 
-// Gera resumo de duração e média de leitura
 function avaliarLeitura(dataInicio, dataFim, paginas) {
   const diffMs = dataFim - dataInicio;
   const dias = Math.ceil(diffMs / (1000 * 60 * 60 * 24));
@@ -309,95 +287,38 @@ function avaliarLeitura(dataInicio, dataFim, paginas) {
     `Duração: ${dias} dia(s)\n` +
     `Média: ${vel} página(s)/dia`;
 }
-
-// Lê campos, cria novo item e salva no localStorage
-function salvarItem() {
-  const nome = document.getElementById('nomeItem').value.trim();
-  const tipo = document.getElementById('tipoItem').value;
-  const arquivo = document.getElementById('fileInput').files[0];
-
-  if (!nome || !tipo || !arquivo) {
-    alert('Preencha todos os campos.');
-    return;
-  }
-
-  const reader = new FileReader();
-  reader.onload = function (e) {
-    const novoItem = {
-      nome,
-      tipo,
-      imagem: e.target.result,
-      data: new Date().toLocaleString('pt-BR'),
-      status: 'Não lido',
-      dataConclusao: null
-    };
-
-    salvarNoLocalStorage(novoItem);
-    alert(`Item "${nome}" salvo com sucesso!`);
-
-    // Limpa formularários
-    document.getElementById('nomeItem').value = '';
-    document.getElementById('tipoItem').value = '';
-    document.getElementById('fileInput').value = '';
-
-    // Recarrega a página para atualizar Home e histórico
-    window.location.reload();
-  };
-  reader.readAsDataURL(arquivo);
-}
-
-// Adiciona um item ao array e regrava no localStorage
-function salvarNoLocalStorage(item) {
-  const itens = JSON.parse(localStorage.getItem('itens')) || [];
-  itens.push(item);
-  localStorage.setItem('itens', JSON.stringify(itens));
-}
-
-
-// Lê todos os itens, atualiza estatísticas e renderiza cartões
-function carregarItensDoLocalStorage() {
-  const itens = JSON.parse(localStorage.getItem('itens')) || [];
-
-  // Atualiza números na Home
-  atualizarEstatisticas(itens);
-
-  // Se não houver container de cards, aborta
-  const cardsContainer = document.querySelector('.cards-container');
-  if (!cardsContainer) return;
-
-  cardsContainer.innerHTML = '';
-  itens.forEach(adicionarCartaoAoHistorico);
-}
-
-
 // Atualiza estatísticas de livros e HQs na Home
 function atualizarEstatisticas(itens) {
   const livros = itens.filter(i => i.tipo === 'Livro');
   const hqs = itens.filter(i => i.tipo === 'HQ');
 
   const cont = (arr, status) => arr.filter(i => i.status === status).length;
+  const pct = (num, tot) => tot > 0 ? Math.round((num / tot) * 100) : 0;
 
   const livrosTotal = livros.length;
   const hqsTotal = hqs.length;
-  const livrosL = cont(livros, 'Lido');
-  const hqsL = cont(hqs, 'Lido');
-  const pct = (num, tot) => tot > 0 ? Math.round((num / tot) * 100) : 0;
 
-  // Elementos da Home
+  const livrosLidos = cont(livros, 'Lido');
+  const livrosNaoLidos = cont(livros, 'Não lido');
+
+  const hqsLidas = cont(hqs, 'Lido');
+  const hqsNaoLidas = cont(hqs, 'Não lido');
+
+  // Atualiza elementos da Home
   document.getElementById('total-livros').textContent = livrosTotal;
-  document.getElementById('livros-lidos').textContent = livrosL;
-  document.getElementById('livros-nao-lidos').textContent = cont(livros, 'Não lido');
-  document.getElementById('livros-percent').textContent = pct(livrosL, livrosTotal) + '%';
-  document.getElementById('percent-livros').textContent = pct(livrosL, livrosTotal) + '%';
+  document.getElementById('livros-lidos').textContent = livrosLidos;
+  document.getElementById('livros-nao-lidos').textContent = livrosNaoLidos;
+  document.getElementById('livros-percent').textContent = pct(livrosLidos, livrosTotal) + '%';
+  document.getElementById('percent-livros').textContent = pct(livrosLidos, livrosTotal) + '%';
+  document.getElementById('percent-livros-nao-lidos').textContent = pct(livrosNaoLidos, livrosTotal) + '%';
 
   document.getElementById('total-hqs').textContent = hqsTotal;
-  document.getElementById('hqs-lidas').textContent = hqsL;
-  document.getElementById('hqs-nao-lidas').textContent = cont(hqs, 'Não lido');
-  document.getElementById('hqs-percent').textContent = pct(hqsL, hqsTotal) + '%';
-  document.getElementById('percent-hqs').textContent = pct(hqsL, hqsTotal) + '%';
+  document.getElementById('hqs-lidas').textContent = hqsLidas;
+  document.getElementById('hqs-nao-lidas').textContent = hqsNaoLidas;
+  document.getElementById('hqs-percent').textContent = pct(hqsLidas, hqsTotal) + '%';
+  document.getElementById('percent-hqs').textContent = pct(hqsLidas, hqsTotal) + '%';
+  document.getElementById('percent-hqs-nao-lidas').textContent = pct(hqsNaoLidas, hqsTotal) + '%';
 }
-
-
 // Cria um cartão no histórico com botão de status e excluir
 function adicionarCartaoAoHistorico(item) {
   const cardsContainer = document.querySelector('.cards-container');
@@ -641,47 +562,74 @@ function excluirItemDoLocalStorage(itemParaExcluir) {
 
 // Atualiza todos os campos de estatísticas na Home
 function atualizarEstatisticas(itens) {
-  const totalLivros = document.getElementById('total-livros');
-  const totalHqs = document.getElementById('total-hqs');
-  const percentLivros = document.getElementById('percent-livros');
-  const percentHqs = document.getElementById('percent-hqs');
-  const livrosLidos = document.getElementById('livros-lidos');
-  const livrosNaoLidos = document.getElementById('livros-nao-lidos');
-  const livrosPercent = document.getElementById('livros-percent');
-  const hqsLidas = document.getElementById('hqs-lidas');
-  const hqsNaoLidas = document.getElementById('hqs-nao-lidas');
-  const hqsPercent = document.getElementById('hqs-percent');
+  const elementos = {
+    totalLivros: document.getElementById('total-livros'),
+    totalHqs: document.getElementById('total-hqs'),
+    percentLivros: document.getElementById('percent-livros'),
+    percentHqs: document.getElementById('percent-hqs'),
+    livrosLidos: document.getElementById('livros-lidos'),
+    livrosNaoLidos: document.getElementById('livros-nao-lidos'),
+    livrosPercent: document.getElementById('livros-percent'),
+    percentLivrosNaoLidos: document.getElementById('percent-livros-nao-lidos'),
+    hqsLidas: document.getElementById('hqs-lidas'),
+    hqsNaoLidas: document.getElementById('hqs-nao-lidas'),
+    hqsPercent: document.getElementById('hqs-percent'),
+    percentHqsNaoLidas: document.getElementById('percent-hqs-nao-lidas'),
+    livrosAndamento: document.getElementById('livros-andamento'),
+    percentLivrosAndamento: document.getElementById('percent-livros-andamento'),
+    hqsAndamento: document.getElementById('hqs-andamento'),
+    percentHqsAndamento: document.getElementById('percent-hqs-andamento')
+  };
 
-  const livros = itens.filter(i => i.tipo === 'Livro');
-  const hqs = itens.filter(i => i.tipo === 'HQ');
+  const filtrarPorTipo = (tipo) => itens.filter(i => i.tipo === tipo);
+  const contarPorStatus = (arr, status) => arr.filter(i => i.status === status).length;
+  const calcularPct = (num, tot) => tot > 0 ? Math.round((num / tot) * 100) : 0;
 
-  const livrosL = livros.filter(i => i.status === 'Lido').length;
-  const livrosN = livros.filter(i => i.status === 'Não lido').length;
-  const livrosA = livros.filter(i => i.status === 'Em andamento').length;
-
-  const hqsL = hqs.filter(i => i.status === 'Lido').length;
-  const hqsN = hqs.filter(i => i.status === 'Não lido').length;
-  const hqsA = hqs.filter(i => i.status === 'Em andamento').length;
+  const livros = filtrarPorTipo('Livro');
+  const hqs = filtrarPorTipo('HQ');
 
   const livrosTotal = livros.length;
   const hqsTotal = hqs.length;
 
-  const livrosPct = livrosTotal > 0 ? Math.round((livrosL / livrosTotal) * 100) : 0;
-  const hqsPct = hqsTotal > 0 ? Math.round((hqsL / hqsTotal) * 100) : 0;
+  const livrosL = contarPorStatus(livros, 'Lido');
+  const livrosN = contarPorStatus(livros, 'Não lido');
+  const livrosA = contarPorStatus(livros, 'Em andamento');
 
-  if (totalLivros) totalLivros.textContent = livrosTotal;
-  if (totalHqs) totalHqs.textContent = hqsTotal;
-  if (percentLivros) percentLivros.textContent = `${livrosPct}%`;
-  if (percentHqs) percentHqs.textContent = `${hqsPct}%`;
+  const hqsL = contarPorStatus(hqs, 'Lido');
+  const hqsN = contarPorStatus(hqs, 'Não lido');
+  const hqsA = contarPorStatus(hqs, 'Em andamento');
 
-  if (livrosLidos) livrosLidos.textContent = livrosL;
-  if (livrosNaoLidos) livrosNaoLidos.textContent = livrosN;
-  if (livrosPercent) livrosPercent.textContent = `${livrosPct}%`;
+  const livrosPctLidos = calcularPct(livrosL, livrosTotal);
+  const livrosPctNaoLidos = calcularPct(livrosN, livrosTotal);
+  const livrosPctAndamento = calcularPct(livrosA, livrosTotal);
 
-  if (hqsLidas) hqsLidas.textContent = hqsL;
-  if (hqsNaoLidas) hqsNaoLidas.textContent = hqsN;
-  if (hqsPercent) hqsPercent.textContent = `${hqsPct}%`;
+  const hqsPctLidas = calcularPct(hqsL, hqsTotal);
+  const hqsPctNaoLidas = calcularPct(hqsN, hqsTotal);
+  const hqsPctAndamento = calcularPct(hqsA, hqsTotal);
+
+  // Atualiza DOM
+  if (elementos.totalLivros) elementos.totalLivros.textContent = livrosTotal;
+  if (elementos.totalHqs) elementos.totalHqs.textContent = hqsTotal;
+
+  if (elementos.livrosLidos) elementos.livrosLidos.textContent = livrosL;
+  if (elementos.livrosNaoLidos) elementos.livrosNaoLidos.textContent = livrosN;
+  if (elementos.livrosPercent) elementos.livrosPercent.textContent = `${livrosPctLidos}%`;
+  if (elementos.percentLivros) elementos.percentLivros.textContent = `${livrosPctLidos}%`;
+  if (elementos.percentLivrosNaoLidos) elementos.percentLivrosNaoLidos.textContent = `${livrosPctNaoLidos}%`;
+
+  if (elementos.hqsLidas) elementos.hqsLidas.textContent = hqsL;
+  if (elementos.hqsNaoLidas) elementos.hqsNaoLidas.textContent = hqsN;
+  if (elementos.hqsPercent) elementos.hqsPercent.textContent = `${hqsPctLidas}%`;
+  if (elementos.percentHqs) elementos.percentHqs.textContent = `${hqsPctLidas}%`;
+  if (elementos.percentHqsNaoLidas) elementos.percentHqsNaoLidas.textContent = `${hqsPctNaoLidas}%`;
+
+  if (elementos.livrosAndamento) elementos.livrosAndamento.textContent = livrosA;
+  if (elementos.percentLivrosAndamento) elementos.percentLivrosAndamento.textContent = `${livrosPctAndamento}%`;
+
+  if (elementos.hqsAndamento) elementos.hqsAndamento.textContent = hqsA;
+  if (elementos.percentHqsAndamento) elementos.percentHqsAndamento.textContent = `${hqsPctAndamento}%`;
 }
+
 
 // Carrega itens do localStorage, atualiza estatísticas e renderiza cards (se existir container)
 function carregarItensDoLocalStorage() {
@@ -718,7 +666,7 @@ document.addEventListener("DOMContentLoaded", () => {
 });
 
 function atualizarResumoCarrinho() {
-  const itens = JSON.parse(localStorage.getItem("itens")) || [];
+  const itens = JSON.parse(localStorage.getItem("carrinhoItens")) || [];
 
   const total = itens.length;
   let hqs = 0, livros = 0, outros = 0;
@@ -727,17 +675,18 @@ function atualizarResumoCarrinho() {
   let totalCarrinho = 0;
 
   itens.forEach(item => {
-    const tipos = item.tipo.split(",").map(t => t.trim());
-    if (tipos.includes("HQ")) hqs++;
-    if (tipos.includes("Livro")) livros++;
-    if (tipos.includes("Outro")) outros++;
+    const tipos = item.tipo.split(",").map(t => t.trim().toLowerCase());
+
+    if (tipos.includes("hq")) hqs++;
+    if (tipos.includes("livro")) livros++;
+    if (tipos.includes("outro")) outros++;
 
     if (item.status === "Comprei") {
       comprados++;
-      totalGasto += item.valor || 0;
+      totalGasto += parseFloat(item.valor) || 0;
     } else {
       apendentes++;
-      totalCarrinho += item.valor || 0;
+      totalCarrinho += parseFloat(item.valor) || 0;
     }
   });
 
@@ -763,6 +712,8 @@ function atualizarResumoCarrinho() {
   document.getElementById("total-carrinho-valor").textContent = `R$ ${totalCarrinho.toFixed(2)}`;
 }
 
+// Função para registrar eventos detalhados no histórico
+
 // GRÁFICO INTERATIVO
 let graficoAtual = null;
 
@@ -771,39 +722,76 @@ function mostrarGrafico(tipo) {
   const livros = itens.filter(i => i.tipo === 'Livro');
   const hqs = itens.filter(i => i.tipo === 'HQ');
 
-  const livrosLidos = livros.filter(i => i.status === 'Lido').length;
-  const livrosNaoLidos = livros.length - livrosLidos;
+  const contar = (arr, status) => arr.filter(i => i.status === status).length;
 
-  const hqsLidos = hqs.filter(i => i.status === 'Lido').length;
-  const hqsNaoLidos = hqs.length - hqsLidos;
+  const livrosLidos = contar(livros, 'Lido');
+  const livrosNaoLidos = contar(livros, 'Não lido');
+  const livrosAndamento = contar(livros, 'Em andamento');
 
-  let dados, titulo, labels;
+  const hqsLidos = contar(hqs, 'Lido');
+  const hqsNaoLidos = contar(hqs, 'Não lido');
+  const hqsAndamento = contar(hqs, 'Em andamento');
 
-  if (tipo === 'relacao') {
-    dados = [livros.length, hqs.length];
-    labels = ['Livros', 'HQs'];
-    titulo = 'Relação entre Livros e HQs';
-  } else if (tipo === 'hq') {
-    dados = [hqsLidos, hqsNaoLidos];
-    labels = ['HQs Lidos', 'HQs Não Lidos'];
-    titulo = 'HQs Lidos vs Não Lidos';
-  } else if (tipo === 'livro') {
-    dados = [livrosLidos, livrosNaoLidos];
-    labels = ['Livros Lidos', 'Livros Não Lidos'];
-    titulo = 'Livros Lidos vs Não Lidos';
-  }
+  const totalItens = itens.length;
+  const totalLidos = contar(itens, 'Lido');
 
+  let dados, titulo, labels, tipoGrafico = 'doughnut';
   const ctx = document.getElementById('graficoCanvas').getContext('2d');
 
   if (graficoAtual) graficoAtual.destroy();
 
+  switch (tipo) {
+    case 'relacao':
+      dados = [livros.length, hqs.length];
+      labels = ['Livros', 'HQs'];
+      titulo = 'Relação entre Livros e HQs';
+      break;
+
+    case 'hq':
+      dados = [hqsLidos, hqsNaoLidos];
+      labels = ['HQs Lidos', 'HQs Não Lidos'];
+      titulo = 'HQs Lidos vs Não Lidos';
+      break;
+
+    case 'livro':
+      dados = [livrosLidos, livrosNaoLidos];
+      labels = ['Livros Lidos', 'Livros Não Lidos'];
+      titulo = 'Livros Lidos vs Não Lidos';
+      break;
+
+    case 'status-livros':
+      dados = [livrosLidos, livrosNaoLidos, livrosAndamento];
+      labels = ['Lidos', 'Não Lidos', 'Em Andamento'];
+      titulo = 'Status dos Livros';
+      break;
+
+    case 'status-hqs':
+      dados = [hqsLidos, hqsNaoLidos, hqsAndamento];
+      labels = ['Lidas', 'Não Lidas', 'Em Andamento'];
+      titulo = 'Status das HQs';
+      break;
+
+    case 'andamento':
+      dados = [livrosAndamento, hqsAndamento];
+      labels = ['Livros em andamento', 'HQs em andamento'];
+      titulo = 'Itens em andamento';
+      tipoGrafico = 'bar';
+      break;
+
+    case 'progresso-total':
+      dados = [totalLidos, totalItens - totalLidos];
+      labels = ['Lidos', 'Não Lidos'];
+      titulo = 'Progresso Total de Leitura';
+      break;
+  }
+
   graficoAtual = new Chart(ctx, {
-    type: 'doughnut',
+    type: tipoGrafico,
     data: {
       labels: labels,
       datasets: [{
         data: dados,
-        backgroundColor: ['#2ecc71', '#e74c3c'],
+        backgroundColor: ['#2ecc71', '#e74c3c', '#f1c40f'],
         borderWidth: 1
       }]
     },
@@ -814,7 +802,7 @@ function mostrarGrafico(tipo) {
           display: true,
           text: titulo,
           font: {
-            size: 18
+            size: 16
           }
         },
         legend: {
@@ -824,3 +812,4 @@ function mostrarGrafico(tipo) {
     }
   });
 }
+
