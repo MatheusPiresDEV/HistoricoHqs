@@ -1,13 +1,19 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
+  
   <meta charset="UTF-8" />
+  
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  
   <title>Histórico de Itens</title>
+  
   <link rel="stylesheet" href="style.css" />
+  
   <script defer src="script.js"></script>
 </head>
 <body>
+  
   <!-- Header fixo -->
   <header class="header">
     <h1>Histórico</h1>
@@ -28,17 +34,30 @@
   <!-- Conteúdo principal -->
   <main class="main-content">
     <section class="cards-container">
+
       <!-- Exemplo de cartão -->
-      <div class="item-card">
-        <img src="img/exemplo.jpg" alt="Capa do item" class="item-image" />
+      <article class="item-card">
+        <img
+          src="img/exemplo.jpg"
+          alt="Capa do item"
+          class="item-image"
+        />
         <div class="item-info">
           <h3 class="item-title">Nome do Item</h3>
-          <p class="item-date">Adicionado em: 09/08/2025</p>
+          <!-- data-inicio no formato ISO para o script -->
+          <p
+            class="item-date"
+            data-inicio="2025-08-09T22:00:00"
+          >
+            Adicionado em: 09/08/2025 22:00:00
+          </p>
           <p class="item-status lido">Status: Lido</p>
         </div>
-      </div>
+        <button class="botao-concluir">Marcar como concluído</button>
+        <pre class="resultado"></pre>
+      </article>
 
-      <!-- Mais cartões podem ser adicionados dinamicamente -->
+      <!-- Você pode replicar o <article> acima ou gerar dinamicamente -->
     </section>
 
     <!-- Paginação -->

@@ -6,6 +6,7 @@
   <title>Histórico de HQs e Livros</title>
   <link rel="stylesheet" href="style.css" />
   <script defer src="script.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 </head>
 <body>
   <!-- Header fixo -->
@@ -65,6 +66,16 @@
         <p>Não lidos: <span id="livros-nao-lidos">0</span></p>
         <p>Porcentagem lidos: <span id="livros-percent">0%</span></p>
       </div>
+    </section>
+
+    <!-- Gráfico interativo -->
+    <section class="grafico-section">
+      <div class="grafico-controles">
+        <button onclick="mostrarGrafico('relacao')">Relação HQs vs Livros</button>
+        <button onclick="mostrarGrafico('hq')">HQs Lidos vs Não lidos</button>
+        <button onclick="mostrarGrafico('livro')">Livros Lidos vs Não lidos</button>
+      </div>
+      <canvas id="graficoCanvas" width="400" height="400"></canvas>
     </section>
   </main>
 </body>

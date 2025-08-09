@@ -13,87 +13,6 @@ body {
   line-height: 1.6;
 }
 
-/* Conteúdo principal da Home */
-.main-content {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  padding: 40px 20px;
-  min-height: calc(100vh - 70px); /* considera o header fixo */
-  gap: 40px;
-}
-
-/* Blocos de estatísticas */
-.stats-overview {
-  display: flex;
-  flex-wrap: wrap;
-  justify-content: center;
-  gap: 30px;
-  width: 100%;
-  max-width: 1000px;
-  text-align: center;
-}
-
-.stat-block {
-  background-color: white;
-  border-radius: 10px;
-  padding: 20px;
-  width: 200px;
-  box-shadow: 0 2px 5px rgba(0,0,0,0.1);
-  transition: transform 0.3s ease;
-}
-
-.stat-block:hover {
-  transform: scale(1.03);
-}
-
-.stat-block .icon {
-  font-size: 2rem;
-  margin-bottom: 10px;
-  display: block;
-}
-
-/* Cartões detalhados */
-.detailed-stats {
-  display: flex;
-  flex-wrap: wrap;
-  justify-content: center;
-  gap: 30px;
-  width: 100%;
-  max-width: 800px;
-}
-
-.card {
-  background-color: white;
-  border-radius: 10px;
-  padding: 20px;
-  width: 300px;
-  box-shadow: 0 2px 5px rgba(0,0,0,0.1);
-  text-align: center;
-  transition: transform 0.3s ease;
-}
-
-.card:hover {
-  transform: scale(1.03);
-}
-
-/* Responsividade */
-@media (max-width: 600px) {
-  .stat-block,
-  .card {
-    width: 100%;
-    max-width: 300px;
-  }
-
-  .stats-overview,
-  .detailed-stats {
-    flex-direction: column;
-    align-items: center;
-  }
-}
-
-
 /* Header fixo */
 .header {
   position: fixed;
@@ -171,6 +90,71 @@ body {
   }
 }
 
+/* Conteúdo principal da Home */
+.main-content {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 40px 20px;
+  min-height: calc(100vh - 70px);
+  gap: 40px;
+}
+
+/* Blocos de estatísticas */
+.stats-overview {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 30px;
+  width: 100%;
+  max-width: 1000px;
+  text-align: center;
+}
+
+.stat-block {
+  background-color: white;
+  border-radius: 10px;
+  padding: 20px;
+  width: 200px;
+  box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+  transition: transform 0.3s ease;
+}
+
+.stat-block:hover {
+  transform: scale(1.03);
+}
+
+.stat-block .icon {
+  font-size: 2rem;
+  margin-bottom: 10px;
+  display: block;
+}
+
+/* Cartões detalhados */
+.detailed-stats {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 30px;
+  width: 100%;
+  max-width: 800px;
+}
+
+.card {
+  background-color: white;
+  border-radius: 10px;
+  padding: 20px;
+  width: 300px;
+  box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+  text-align: center;
+  transition: transform 0.3s ease;
+}
+
+.card:hover {
+  transform: scale(1.03);
+}
+
 /* Seção de adição */
 .adicionar-section {
   display: flex;
@@ -185,70 +169,6 @@ body {
   pointer-events: none;
   height: 0;
   overflow: hidden;
-}
-
-/* Botão principal */
-.btn-adicionar {
-  padding: 15px 30px;
-  font-size: 1.2rem;
-  background-color: #2ecc71;
-  color: white;
-  border: none;
-  border-radius: 8px;
-  cursor: pointer;
-  transition: background-color 0.3s ease;
-}
-
-.btn-adicionar:hover {
-  background-color: #27ae60;
-}
-
-/* Modal de senha */
-.modal {
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  background-color: rgba(0,0,0,0.5);
-  display: none;
-  justify-content: center;
-  align-items: center;
-  z-index: 2000;
-  overflow-y: auto;
-  padding: 20px;
-}
-
-.modal-content {
-  background-color: white;
-  padding: 30px;
-  border-radius: 10px;
-  text-align: center;
-  max-width: 400px;
-  width: 100%;
-}
-
-.modal-content input {
-  padding: 10px;
-  margin: 10px 0;
-  width: 80%;
-  border: 1px solid #ccc;
-  border-radius: 5px;
-}
-
-.modal-content button {
-  padding: 10px 20px;
-  margin: 5px;
-  background-color: #3498db;
-  color: white;
-  border: none;
-  border-radius: 5px;
-  cursor: pointer;
-  transition: background-color 0.3s ease;
-}
-
-.modal-content button:hover {
-  background-color: #2980b9;
 }
 
 /* Formulário de adição */
@@ -300,18 +220,48 @@ body {
   background-color: #ecf0f1;
 }
 
-.form-adicao button {
-  padding: 10px 20px;
-  background-color: #2ecc71;
-  color: white;
+/* Botões principais com hover aprimorado */
+button {
   border: none;
-  border-radius: 5px;
+  border-radius: 6px;
+  padding: 10px 18px;
+  font-size: 1rem;
   cursor: pointer;
-  transition: background-color 0.3s ease;
+  transition: background-color 0.3s ease,
+              transform 0.2s ease,
+              box-shadow 0.2s ease;
 }
 
-.form-adicao button:hover {
+.btn-adicionar {
+  background-color: #2ecc71;
+  color: white;
+}
+
+.btn-status {
+  background-color: #3498db;
+  color: white;
+}
+
+.btn-excluir {
+  background-color: #e74c3c;
+  color: white;
+}
+
+button:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 8px rgba(0,0,0,0.15);
+}
+
+.btn-adicionar:hover {
   background-color: #27ae60;
+}
+
+.btn-status:hover {
+  background-color: #2980b9;
+}
+
+.btn-excluir:hover {
+  background-color: #c0392b;
 }
 
 /* Cartões do histórico */
@@ -319,7 +269,7 @@ body {
   display: flex;
   flex-wrap: wrap;
   justify-content: center;
-  align-items: center;
+  align-items: flex-start;  /* alinha pelo topo */
   gap: 20px;
   padding: 40px 20px;
   text-align: center;
@@ -328,10 +278,15 @@ body {
 .item-card {
   background-color: white;
   border-radius: 10px;
-  width: 220px;
   box-shadow: 0 2px 5px rgba(0,0,0,0.1);
   overflow: hidden;
   transition: transform 0.3s ease;
+  
+  display: flex;
+  flex-direction: column;
+  flex: 1 1 220px;
+  max-width: 300px;
+  width: auto;
 }
 
 .item-card:hover {
@@ -340,17 +295,45 @@ body {
 
 .item-image {
   width: 100%;
-  height: 150px;
+  height: auto;
   object-fit: cover;
 }
 
 .item-info {
   padding: 10px;
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+  flex: 1;
 }
 
 .item-title {
   font-size: 1.1rem;
-  margin-bottom: 5px;
+  font-weight: bold;
+  white-space: normal;
+  word-break: break-word;
+  overflow-wrap: break-word;
+}
+
+.item-date {
+  font-size: 0.9rem;
+  color: #555;
+}
+
+.item-status {
+  font-size: 0.95rem;
+  white-space: normal;
+  word-break: break-word;
+  overflow-wrap: break-word;
+}
+
+.item-status.nao-lido {
+  color: red;
+  font-weight: bold;
+}
+
+.item-status.em-andamento {
+  color: orange;
   font-weight: bold;
 }
 
@@ -359,9 +342,14 @@ body {
   font-weight: bold;
 }
 
-.item-status.nao-lido {
-  color: red;
-  font-weight: bold;
+/* Resultado da leitura */
+.resultado {
+  background-color: #ecf0f1;
+  padding: 10px;
+  border-radius: 5px;
+  font-family: monospace;
+  white-space: pre-wrap;
+  margin-top: 10px;
 }
 
 /* Responsividade geral */
