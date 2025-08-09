@@ -9,7 +9,7 @@
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 </head>
 <body>
-  <!-- Header fixo -->
+  <!-- Header fixo com hamburger -->
   <header class="header">
     <h1>Histórico</h1>
     <nav class="nav">
@@ -17,8 +17,9 @@
         <li><a href="index.html">Home</a></li>
         <li><a href="adicionar.html">Adicionar</a></li>
         <li><a href="historico.html">Histórico</a></li>
+        <li><a href="carrinho.html">Carrinho</a></li>
       </ul>
-      <div class="hamburger" onclick="toggleMenu()">
+      <div class="hamburger">
         <span></span>
         <span></span>
         <span></span>
@@ -28,7 +29,6 @@
 
   <!-- Conteúdo principal -->
   <main class="main-content">
-    <!-- Blocos principais -->
     <section class="stats-overview">
       <div class="stat-block">
         <i class="icon">📚</i>
@@ -52,7 +52,6 @@
       </div>
     </section>
 
-    <!-- Cartões detalhados -->
     <section class="detailed-stats">
       <div class="card">
         <h3>HQs</h3>
@@ -68,7 +67,6 @@
       </div>
     </section>
 
-    <!-- Gráfico interativo -->
     <section class="grafico-section">
       <div class="grafico-controles">
         <button onclick="mostrarGrafico('relacao')">Relação HQs vs Livros</button>
