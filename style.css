@@ -135,20 +135,18 @@ body {
 .detailed-stats {
   display: flex;
   flex-wrap: wrap;
-  justify-content: center;
-  gap: 30px;
-  width: 100%;
-  max-width: 800px;
+  gap: 20px;
+  justify-content: center; /* ou space-between */
+  padding: 20px;
 }
 
 .card {
   background-color: white;
   border-radius: 10px;
+  box-shadow: 0 2px 5px rgba(0,0,0,0.1);
   padding: 20px;
   width: 300px;
-  box-shadow: 0 2px 5px rgba(0,0,0,0.1);
-  text-align: center;
-  transition: transform 0.3s ease;
+  flex: 1 1 300px;
 }
 
 .card:hover {
@@ -351,7 +349,15 @@ button:hover {
   white-space: pre-wrap;
   margin-top: 10px;
 }
+.card h3 {
+  font-size: 1.3rem;
+  margin-bottom: 10px;
+}
 
+.card p {
+  font-size: 1rem;
+  margin: 5px 0;
+}
 /* Responsividade geral */
 @media (max-width: 600px) {
   .form-adicao {
