@@ -734,6 +734,8 @@ function mostrarGrafico(tipo) {
 
   const totalItens = itens.length;
   const totalLidos = contar(itens, 'Lido');
+  const totalEmAndamento = contar(itens, 'Em andamento');
+  const totalNaoLidos = contar(itens, 'Não lido');
 
   let dados, titulo, labels, tipoGrafico = 'doughnut';
   const ctx = document.getElementById('graficoCanvas').getContext('2d');
@@ -779,8 +781,8 @@ function mostrarGrafico(tipo) {
       break;
 
     case 'progresso-total':
-      dados = [totalLidos, totalItens - totalLidos];
-      labels = ['Lidos', 'Não Lidos'];
+      dados = [totalLidos, totalEmAndamento, totalNaoLidos];
+      labels = ['Lidos', 'Em Andamento', 'Não Lidos'];
       titulo = 'Progresso Total de Leitura';
       break;
   }
@@ -791,7 +793,7 @@ function mostrarGrafico(tipo) {
       labels: labels,
       datasets: [{
         data: dados,
-        backgroundColor: ['#2ecc71', '#e74c3c', '#f1c40f'],
+        backgroundColor: ['#2ecc71', '#f1c40f', '#e74c3c'],
         borderWidth: 1
       }]
     },
@@ -812,4 +814,5 @@ function mostrarGrafico(tipo) {
     }
   });
 }
+
 
