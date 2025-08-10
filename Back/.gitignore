@@ -1,12 +1,34 @@
-echo "node_modules/" >> .gitignore
-echo ".env" >> .gitignore
-echo "package-lock.json" >> .gitignore
-echo "*.log" >> .gitignore
-echo ".vscode/" >> .gitignore
-echo "uploads/" >> .gitignore
-echo "*.png" >> .gitignore
-echo "*.jpg" >> .gitignore
-echo "*.jpeg" >> .gitignore
-echo "*.gif" >> .gitignore
-echo ".DS_Store" >> .gitignore
-echo "Thumbs.db" >> .gitignore
+﻿# Node modules
+node_modules/
+
+# Logs
+logs
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# Environment variables
+.env
+
+# OS-specific
+.DS_Store
+Thumbs.db
+
+# IDEs
+.vscode/
+.idea/
+
+# Coverage reports
+coverage/
+
+# Build artifacts
+dist/
+build/
+
+# Optional: MongoDB dump files
+dump/
+
+# Optional: Temporary files
+*.tmp
+*.swp
