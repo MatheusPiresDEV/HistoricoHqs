@@ -213,6 +213,27 @@ function adicionarCartaoAoHistorico(item) {
       pre.className = 'resultado';
       pre.innerText = resumo;
       info.appendChild(pre);
+
+      // Envia para o backend
+      fetch('http://localhost:3000/api/historico', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          nome: item.nome,
+          tipo: item.tipo,
+          dataInicio: item.data,
+          dataConclusao: item.dataConclusao,
+          paginas,
+          resumo
+        })
+      })
+      .then(res => res.json())
+      .then(data => {
+        console.log('Salvo no banco:', data);
+      })
+      .catch(err => {
+        console.error('Erro ao salvar no banco:', err);
+      });
     }
 
     atualizarItemNoLocalStorage(item);
@@ -357,6 +378,14 @@ function adicionarCartaoAoHistorico(item) {
   statusBtn.className = 'btn-status';
   atualizarTextoBotaoStatus(statusBtn, item.status);
 
+  // Se o item já está concluído e tem resumo salvo, exibe o resumo ao renderizar
+  if (item.status === 'Lido' && item.resumo) {
+    const pre = document.createElement('pre');
+    pre.className = 'resultado';
+    pre.innerText = item.resumo;
+    info.appendChild(pre);
+  }
+
   statusBtn.addEventListener('click', () => {
     if (item.status === 'Não lido') {
       item.status = 'Em andamento';
@@ -376,6 +405,12 @@ function adicionarCartaoAoHistorico(item) {
 
       item.status = 'Lido';
       item.dataConclusao = new Date().toLocaleString('pt-BR');
+
+      // Gera e salva o resumo no item
+      const inicio = parseDataHistorico(item.data);
+      const fim = parseDataHistorico(item.dataConclusao);
+      const resumo = avaliarLeitura(inicio, fim, paginas);
+      item.resumo = resumo;
       atualizarItemNoLocalStorage(item);
 
       statusEl.textContent = `Status: ${item.status}`;
@@ -383,13 +418,31 @@ function adicionarCartaoAoHistorico(item) {
       atualizarTextoBotaoStatus(statusBtn, item.status);
 
       // Exibe resumo
-      const inicio = parseDataHistorico(item.data);
-      const fim = parseDataHistorico(item.dataConclusao);
-      const resumo = avaliarLeitura(inicio, fim, paginas);
       const pre = document.createElement('pre');
       pre.className = 'resultado';
       pre.innerText = resumo;
       info.appendChild(pre);
+
+      // Envia para o backend
+      fetch('http://localhost:3000/api/historico', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          nome: item.nome,
+          tipo: item.tipo,
+          dataInicio: item.data,
+          dataConclusao: item.dataConclusao,
+          paginas,
+          resumo
+        })
+      })
+      .then(res => res.json())
+      .then(data => {
+        console.log('Salvo no banco:', data);
+      })
+      .catch(err => {
+        console.error('Erro ao salvar no banco:', err);
+      });
     }
   });
 
